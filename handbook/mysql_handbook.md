@@ -50,6 +50,69 @@ ALTER USER 'valerie'@'localhost' IDENTIFIED WITH auth_socket AS 'stephanie';
 SELECT * FROM test PARTITION (p0,p1);
 ```
 
+### [CREATE PROCEDURE and CREATE FUNCTION Statements](https://dev.mysql.com/doc/refman/5.7/en/create-procedure.html)
+
+```
+delimiter //
+CREATE PROCEDURE citycount (IN country CHAR(3), OUT cities INT)
+BEGIN
+ SELECT COUNT(*) INTO cities FROM world.city
+ WHERE CountryCode = country;
+END//
+delimiter ;
+CALL citycount('JPN', @cities);
+SELECT @cities;
+CALL citycount('FRA', @cities);
+SELECT @cities;
+CREATE FUNCTION hello (s CHAR(20))
+RETURNS CHAR(50) DETERMINISTIC
+RETURN CONCAT('Hello, ',s,'!');
+SELECT hello('world');
+
+USE `testdb`;
+DROP procedure IF EXISTS `new_procedure`;
+
+DELIMITER $$
+USE `testdb`$$
+CREATE PROCEDURE `new_procedure` ()
+BEGIN
+DECLARE _var varchar(20) default 'Succeed';
+DECLARE _cnt int default 0;
+SELECT _var, _cnt;
+END$$
+
+DELIMITER ;
+
+CALL new_procedure();
+
+USE `testdb`;
+DROP procedure IF EXISTS `new_procedure2`;
+
+DELIMITER $$
+USE `testdb`$$
+CREATE PROCEDURE `new_procedure2` ()
+BEGIN
+SELECT * FROM world.city;
+END$$
+
+DELIMITER ;
+
+CALL new_procedure2();
+
+DELIMITER $$
+USE `testdb`$$
+CREATE PROCEDURE `new_procedure3` ()
+BEGIN
+SELECT * FROM world.city;
+ select 1 as col1,2 as col2;
+ select 11 as col11,22 as col21;
+END$$
+
+DELIMITER ;
+
+CALL new_procedure3();
+```
+
 ## [Database Administration Statements](https://dev.mysql.com/doc/refman/5.7/en/sql-server-administration-statements.html)
 
 ### [Table Maintenance Statements](https://dev.mysql.com/doc/refman/5.7/en/table-maintenance-statements.html)
